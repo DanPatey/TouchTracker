@@ -34,10 +34,18 @@ class DrawView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(DrawView.tap(_:)))
+        tapRecognizer.delaysTouchesBegan = true
+        addGestureRecognizer(tapRecognizer)
+        
         let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(DrawView.doubleTap(_:)))
         doubleTapRecognizer.numberOfTapsRequired = 2
         doubleTapRecognizer.delaysTouchesBegan = true
         addGestureRecognizer(doubleTapRecognizer)
+    }
+    
+    func tap(gestureRecognizer: UIGestureRecognizer) {
+        print("Recognized a tap")
     }
     
     func doubleTap(gestureRecognizer: UIGestureRecognizer) {
