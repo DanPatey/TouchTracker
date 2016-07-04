@@ -10,7 +10,7 @@ import UIKit
 
 class DrawView: UIView {
     
-    var currentLine: Line?
+    var currentLines = [NSValue:Line]()
     var finishedLines = [Line]()
     
     func strokeLine(line: Line) {
@@ -29,43 +29,55 @@ class DrawView: UIView {
         for line in finishedLines {
             strokeLine(line)
         }
-    
-        if let line = currentLine {
-            // If there is a line currently being drawn, do it in red
-            UIColor.redColor().setStroke()
+        
+        // Draw current line in read
+        UIColor.redColor().setStroke()
+        for (_, line) in currentLines {
             strokeLine(line)
         }
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        let touch = touches.first!
+        // Let's put in a log statement to see the order of events
+        print(#function)
         
-        // Get location of the touch in view's coordinate system
-        let location = touch.locationInView(self)
-        
-        currentLine = Line(begin: location, end: location)
+        for touch in touches {
+            let location = touch.locationInView(self)
+            
+            let newLine = Line(begin: location, end: location)
+            
+            let key = NSValue(nonretainedObject: touch)
+            currentLines[key] = newLine
         
         setNeedsDisplay()
+        }
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        let touch = touches.first!
-        let location = touch.locationInView(self)
         
-        currentLine?.end = location
+        // Let's put in a log statement to see the order of events
+        print(#function)
+        
+        for touch in touches {
+            let key = NSValue(nonretainedObject: touch)
+            currentLines[key]?.end = touch.locationInView(self)
+        }
         
         setNeedsDisplay()
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if var line = currentLine {
-            let touch = touches.first!
-            let location = touch.locationInView(self)
-            line.end = location
-            
-            finishedLines.append(line)
+        // Let's put in a log statement to see the order of events
+        print(#function)
+        
+        for touch in touches {
+            let key = NSValue(nonretainedObject: touch)
+            if var line = currentLines[key] {
+                line.end = touch.locationInView(self)
+                finishedLines.append(line)
+                currentLines.removeValueForKey(key)
+            }
         }
-        currentLine = nil
         
         setNeedsDisplay()
     }
