@@ -66,7 +66,7 @@ class DrawView: UIView {
             becomeFirstResponder()
             
             // Create a new "Delete" UIMenuItem
-            let deleteItem = UIMenuItem(title: "Delete", action: Selector("deleteLine:"))
+            let deleteItem = UIMenuItem(title: "Delete", action: #selector(DrawView.deleteLine(_:)))
             menu.menuItems = [deleteItem]
             
             // Tell the menu where it should come from and show it
