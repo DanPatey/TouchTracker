@@ -6,7 +6,7 @@
 //  Copyright © 2016 Dan Patey. All rights reserved.
 //
 
-import foundation
+import Foundation
 import CoreGraphics
 
 struct Line {
